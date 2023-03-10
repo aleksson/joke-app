@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Jokes</title>
+  </head>
+  <body>
+    <p>Hello World from <strong>Github</strong></p>
+  </body>
+  <script>
+    
+    async function getJoke() {
+      const response = await fetch(
+        "https://backend-omega-seven.vercel.app/api/getjoke"
+      );
+      const res = await response.json();
+      return res;
+    }
+
+    const joke = await getJoke();
+    console.log(joke[0]);
+
+  </script>
+</html>
