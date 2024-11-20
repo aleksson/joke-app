@@ -13,7 +13,7 @@ body {
 
 .container {
     background-color: rgba(16, 16, 32, 0.95);
-    padding: 3rem;
+    padding: 0 2em 2em;
     border-radius: 20px;
     box-shadow: 0 0 30px rgba(138, 43, 226, 0.2),
                 inset 0 0 20px rgba(255, 255, 255, 0.05);
@@ -100,14 +100,14 @@ button:active {
 
 .speak-button {
     position: absolute;
-    right: -50px;
-    top: 50%;
+    right: -25px;
+    top: 110%;
     transform: translateY(-50%);
     background: linear-gradient(45deg, #8a2be2, #4a90e2);
     color: white;
     border: none;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 60px;
     border-radius: 50%;
     cursor: pointer;
     display: flex;

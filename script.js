@@ -4,7 +4,7 @@ const setup = document.getElementById('setup');
 const punchline = document.getElementById('punchline');
 const speakButton = document.getElementById('speakButton');
 
-async function getJoke(category = 'random') {
+async function getJoke(category = 'random', local = false) {
     
     // First stop speech
     isSpeaking = false;
@@ -27,7 +27,7 @@ async function getJoke(category = 'random') {
         }
 
         offline = false;
-        speakJoke();
+        //speakJoke();
 
     } catch (error) {
         offline = true;
@@ -58,7 +58,7 @@ function speakJoke() {
         return;
     }
 
-    const textToSpeak = `${setup.textContent}... ... ${punchline.textContent}`;
+    const textToSpeak = `${setup.textContent}...,...,${punchline.textContent}`;
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
     
     // Configure speech settings
@@ -75,7 +75,7 @@ function speakJoke() {
     }
     /*if (swedishVoice) {
         utterance.voice = swedishVoice;
-    } else if (englishVoice) {
+    } else (englishVoice) {
         utterance.voice = englishVoice;
     }*/
 
