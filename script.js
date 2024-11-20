@@ -1,12 +1,25 @@
-let isSpeaking, isLocal,offline = false;
+let isSpeaking, isLocal, offline = false;
 const emoji = document.getElementById('emoji');
 const setup = document.getElementById('setup');
 const punchline = document.getElementById('punchline');
 const speakButton = document.getElementById('speakButton');
 const locale = new Intl.Locale(navigator.language);
+const localButton = document.getElementById('local-button');
 
+/*(function(){
+    const hash = location.hash.slice(1);
+    const jokeId = hash ? hash : null;
+   
+    if(jokeId) return getJoke(null, false, jokeId);
+})();*/
 
-async function getJoke(category = 'random', local = false) {
+function initLocalButton(){
+    localButton.textContent = `Translate to Local Language (${locale.language.toUpperCase()})`;
+    localButton.style.display = 'none';
+    /** TODO: Check if local language is supported by browser / SpeechSynthesisVoice */
+}
+
+async function getJoke(category = 'random', local = false, id = null) {
     
     // First stop previous speech
     isSpeaking = false;
@@ -21,16 +34,26 @@ async function getJoke(category = 'random', local = false) {
     }
 
     try {
-        const url = `https://official-joke-api.appspot.com/jokes/${ category == 'random' ? 'random' : `${category}/random` }`;
+        let url;
+        if(id){
+            console.log('JokeID', id);
+            url = `https://official-joke-api.appspot.com/jokes/${id}`;
+        }else{
+            url = `https://official-joke-api.appspot.com/jokes/${ category == 'random' ? 'random' : `${category}/random` }`;
+
+        }
+        
+        
         const response = await fetch(url);
         const joke = await response.json();
         
-        
 
         if(category=='random') {
+            location.hash = joke.id;
             setup.textContent = joke.setup;
             punchline.textContent = joke.punchline;
         } else {
+            location.hash = joke[0].id;
             setup.textContent = joke[0].setup;
             punchline.textContent = joke[0].punchline;
         }
@@ -58,6 +81,8 @@ function getLocalJoke(category){
     
     return speakJoke();
 }
+
+
 
 async function translateJoke(inputText, from = 'en', to = 'sv'){
     isLocal = true;
@@ -145,4 +170,5 @@ function shakeEmoji(){
     }, 2000);
 }
 // Load initial joke when page loads
+initLocalButton();
 getJoke();

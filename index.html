@@ -18,7 +18,7 @@
             <button onclick="getJoke('general')">General</button>
             <button onclick="getJoke('knock-knock')">Knock-Knock</button>
             <button onclick="getJoke('programming')">Programming</button>
-            <!--button onclick="getJoke('dad')">Dad</button-->
+            <button onclick="getJoke('dad')">Dad</button>
         </div>
         <div class="joke-container">
             <p class="joke-setup" id="setup"></p>
@@ -27,8 +27,8 @@
             </button>
         </div>
         <p class="joke-punchline" id="punchline"></p>
-        <button onclick="getJoke()">Generate New Joke</button><br><br>
-        <a href="#" onclick="getJoke('random', true)"><u>Translate to Local Language</u></a>
+        <button onclick="getJoke()">Generate A Joke</button><br><br>
+        <a href="#" id="local-button" onclick="getJoke('random', true)"><u>Translate to Local Language</u></a>
         <div id="emoji" class="emoji">😂</div>
     </div>
     <script src="script.js"></script>
