@@ -50,5 +50,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - [Font Awesome](https://fontawesome.com/) for the icons
 - [Google Fonts](https://fonts.google.com/) for the typography
 - [Joke API](https://official-joke-api.appspot.com/) for providing the jokes
+- [More](https://github.com/15Dkatz/official_joke_api/) open repository for providing jokes
 
 Enjoy the laughs!

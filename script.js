@@ -1,4 +1,4 @@
-let isSpeaking = false;
+let isSpeaking, offline = false;
 const emoji = document.getElementById('emoji');
 const setup = document.getElementById('setup');
 const punchline = document.getElementById('punchline');
@@ -6,8 +6,15 @@ const speakButton = document.getElementById('speakButton');
 
 async function getJoke(category = 'random') {
     
+    // First stop speech
+    isSpeaking = false;
+    window.speechSynthesis.cancel();
+    
+    // if offline, get local jokes
+    if(offline) return getLocalJoke(category);
+
     try {
-        const url = `https://official-joke-api.appspot.com/jokes/${ category=='random' ? 'random' : `${category}/random` }`;
+        const url = `https://official-joke-api.appspot.com/jokes/${ category == 'random' ? 'random' : `${category}/random` }`;
         const response = await fetch(url);
         const joke = await response.json();
         
@@ -19,13 +26,28 @@ async function getJoke(category = 'random') {
             punchline.textContent = joke[0].punchline;
         }
 
+        offline = false;
         speakJoke();
 
     } catch (error) {
-        console.error('Error fetching joke:', error);
-        setup.textContent = 'Oops! Failed to fetch joke.';
-        punchline.textContent = 'Please try again later.';
+        offline = true;
+        //console.error('Error fetching joke:', error);
+        //setup.textContent = 'Oops! Failed to fetch joke.';
+        //punchline.textContent = 'Please try again later.';
+
+        // If offline then run get local jokes
+        return getLocalJoke(category);
     }
+}
+
+function getLocalJoke(category){
+    const categoryJokes = window.jokes.filter(joke => (category == 'random' ? joke : joke.type == category));
+    const randomJoke = categoryJokes[Math.floor(Math.random() * categoryJokes.length)];
+    
+    setup.textContent = randomJoke.setup;
+    punchline.textContent = randomJoke.punchline;
+    
+    return speakJoke();
 }
 
 function speakJoke() {

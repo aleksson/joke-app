@@ -1,4 +1,4 @@
-[
+window.jokes = [
   {
     "type": "general",
     "setup": "What did the fish say when it hit the wall?",
