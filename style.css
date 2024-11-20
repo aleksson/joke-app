@@ -37,9 +37,9 @@ h1 {
 
 .joke-setup {
     font-size: 1.3rem;
-    margin-bottom: 1.5rem;
+    /*margin-bottom: 1.5rem;*/
     color: #fff;
-    line-height: 1.6;
+    /*line-height: 1.6;*/
     padding: 1rem;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 10px;
@@ -91,6 +91,18 @@ button:active {
     font-size: 1rem;
     border-radius: 25px;
     cursor: pointer;
+}
+
+#generate-button button{
+    width: 80% !important;
+}
+
+#local-button button{
+    color: dimgray !important;
+}
+
+#local-button button:visited{
+    color: dimgray !important;
 }
 
 .joke-container {
@@ -162,4 +174,14 @@ button:active {
     80% { transform: translate(-1px, -1px) rotate(1deg); }
     90% { transform: translate(1px, 2px) rotate(0deg); }
     100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.footer {
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 0.6em;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: 1px;
+    font-family: 'Space Grotesk', sans-serif;
 }

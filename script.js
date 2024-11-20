@@ -11,7 +11,6 @@ const localButton = document.getElementById('local-button');
     
     const hash = location.hash.slice(1);
     const jokeId = hash ? hash : null;
-    console.log('jokeId', jokeId);
     
     if(!jokeId) return getJoke();
     else getJoke(null, false, jokeId);
@@ -19,13 +18,12 @@ const localButton = document.getElementById('local-button');
 })();
 
 function initLocalButton(){
+    //localButton.style.display = 'none';
     localButton.textContent = `Translate to Local Language (${locale.language.toUpperCase()})`;
-    localButton.style.display = 'none';
     /** TODO: Check if local language is supported by browser / SpeechSynthesisVoice */
 }
 
 async function getJoke(category = 'random', local = false, id = null) {
-    console.log('getJoke', category, local, id);
 
     // First stop previous speech
     isSpeaking = false;
@@ -40,24 +38,18 @@ async function getJoke(category = 'random', local = false, id = null) {
     }
 
     try {
-        let url;
-        if(id) url = `https://official-joke-api.appspot.com/jokes/${id}`;
-        else url = `https://official-joke-api.appspot.com/jokes/${ category == 'random' ? 'random' : `${category}/random` }`;
+        let url = `https://official-joke-api.appspot.com/jokes/`;
+        if(!id) url += `${ category == 'random' ? 'random' : `${category}/random` }`;
+        else url += `${id}`;
         
         const response = await fetch(url);
-        const joke = await response.json();
+        let joke = await response.json();
 
-        console.log('joke', joke);
+        if(Array.isArray(joke)) joke = joke[0];
 
-        if(category=='random' || !category) {
-            location.hash = joke.id;
-            setup.textContent = joke.setup;
-            punchline.textContent = joke.punchline;
-        } else {
-            location.hash = joke[0].id || joke.id;
-            setup.textContent = joke[0].setup || joke.setup;
-            punchline.textContent = joke[0].punchline || joke.punchline;
-        }
+        location.hash = joke.id;
+        setup.textContent = joke.setup;
+        punchline.textContent = joke.punchline;
 
         offline = false;
         speakJoke();
@@ -83,8 +75,6 @@ function getLocalJoke(category){
     return speakJoke();
 }
 
-
-
 async function translateJoke(inputText, from = 'en', to = 'sv'){
     isLocal = true;
     const apiUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(inputText)}&langpair=${from}|${to}`;
@@ -94,8 +84,6 @@ async function translateJoke(inputText, from = 'en', to = 'sv'){
             console.log(data);
             if (data.responseData) {
                 const translatedText = data.responseData.translatedText;
-                console.log('Translated text:', translatedText);
-
                 const textParts = translatedText.split('|');
                 setup.textContent = textParts[0];
                 punchline.textContent = textParts[1];
@@ -123,18 +111,17 @@ function speakJoke() {
     
     // Get available voices and set to a English voice if available
     let voices = speechSynthesis.getVoices();
-    const localVoice = voices.find(voice => voice.lang.startsWith(`${locale.language}-`));
     const englishVoice = voices.find(voice => voice.lang.startsWith('en-'));
     if (englishVoice) {
         utterance.voice = englishVoice;
     }
     
+    /*const localVoice = voices.find(voice => voice.lang.startsWith(`${locale.language}-`));
     if(isLocal && localVoice) {
         utterance.rate = .6; // Speed of speech
         utterance.voice = localVoice;
-    }
+    }*/
 
-    // Add event listeners
     utterance.onstart = () => {
         isSpeaking = true;
         speakButton.classList.add('speaking');
@@ -144,7 +131,6 @@ function speakJoke() {
         isSpeaking = false;
         isLocal = false;
         speakButton.classList.remove('speaking');
-
         shakeEmoji();
     };
 

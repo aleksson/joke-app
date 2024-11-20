@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Joke Generator</title>
     <link rel="icon" href="data:,">
+    <meta name="robots" content="noindex">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,9 +28,12 @@
             </button>
         </div>
         <p class="joke-punchline" id="punchline"></p>
-        <button onclick="getJoke()">Generate A Joke</button><br><br>
+        <button id="generate-button" onclick="getJoke()">Generate A Joke</button><br><br>
         <a href="#" id="local-button" onclick="getJoke('random', true)"><u>Translate to Local Language</u></a>
         <div id="emoji" class="emoji">😂</div>
+        <footer class="footer">
+            <p>By a.Cincarevic &copy 2024</p>
+        </footer>
     </div>
     <script src="script.js"></script>
     <script src="jokes.js"></script>
