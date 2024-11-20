@@ -6,12 +6,17 @@ const speakButton = document.getElementById('speakButton');
 const locale = new Intl.Locale(navigator.language);
 const localButton = document.getElementById('local-button');
 
-/*(function(){
+(function(){
+    initLocalButton();
+    
     const hash = location.hash.slice(1);
     const jokeId = hash ? hash : null;
-   
-    if(jokeId) return getJoke(null, false, jokeId);
-})();*/
+    console.log('jokeId', jokeId);
+    
+    if(!jokeId) return getJoke();
+    else getJoke(null, false, jokeId);
+
+})();
 
 function initLocalButton(){
     localButton.textContent = `Translate to Local Language (${locale.language.toUpperCase()})`;
@@ -20,7 +25,8 @@ function initLocalButton(){
 }
 
 async function getJoke(category = 'random', local = false, id = null) {
-    
+    console.log('getJoke', category, local, id);
+
     // First stop previous speech
     isSpeaking = false;
     window.speechSynthesis.cancel();
@@ -35,27 +41,22 @@ async function getJoke(category = 'random', local = false, id = null) {
 
     try {
         let url;
-        if(id){
-            console.log('JokeID', id);
-            url = `https://official-joke-api.appspot.com/jokes/${id}`;
-        }else{
-            url = `https://official-joke-api.appspot.com/jokes/${ category == 'random' ? 'random' : `${category}/random` }`;
-
-        }
-        
+        if(id) url = `https://official-joke-api.appspot.com/jokes/${id}`;
+        else url = `https://official-joke-api.appspot.com/jokes/${ category == 'random' ? 'random' : `${category}/random` }`;
         
         const response = await fetch(url);
         const joke = await response.json();
-        
 
-        if(category=='random') {
+        console.log('joke', joke);
+
+        if(category=='random' || !category) {
             location.hash = joke.id;
             setup.textContent = joke.setup;
             punchline.textContent = joke.punchline;
         } else {
-            location.hash = joke[0].id;
-            setup.textContent = joke[0].setup;
-            punchline.textContent = joke[0].punchline;
+            location.hash = joke[0].id || joke.id;
+            setup.textContent = joke[0].setup || joke.setup;
+            punchline.textContent = joke[0].punchline || joke.punchline;
         }
 
         offline = false;
@@ -169,6 +170,3 @@ function shakeEmoji(){
         emoji.style.opacity = 0;
     }, 2000);
 }
-// Load initial joke when page loads
-initLocalButton();
-getJoke();
