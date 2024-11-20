@@ -4,13 +4,20 @@ const setup = document.getElementById('setup');
 const punchline = document.getElementById('punchline');
 const speakButton = document.getElementById('speakButton');
 
-async function getJoke() {
+async function getJoke(category = 'random') {
+    
     try {
-        const response = await fetch('https://official-joke-api.appspot.com/jokes/random');
+        const url = `https://official-joke-api.appspot.com/jokes/${ category=='random' ? 'random' : `${category}/random` }`;
+        const response = await fetch(url);
         const joke = await response.json();
         
-        setup.textContent = joke.setup;
-        punchline.textContent = joke.punchline;
+        if(category=='random') {
+            setup.textContent = joke.setup;
+            punchline.textContent = joke.punchline;
+        } else {
+            setup.textContent = joke[0].setup;
+            punchline.textContent = joke[0].punchline;
+        }
 
         speakJoke();
 
@@ -39,10 +46,16 @@ function speakJoke() {
     
     // Get available voices and set to a English voice if available
     let voices = speechSynthesis.getVoices();
+    //const swedishVoice = voices.find(voice => voice.lang.startsWith('sv-'));
     const englishVoice = voices.find(voice => voice.lang.startsWith('en-'));
     if (englishVoice) {
         utterance.voice = englishVoice;
     }
+    /*if (swedishVoice) {
+        utterance.voice = swedishVoice;
+    } else if (englishVoice) {
+        utterance.voice = englishVoice;
+    }*/
 
     // Add event listeners
     utterance.onstart = () => {
