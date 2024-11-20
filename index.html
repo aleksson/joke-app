@@ -8,171 +8,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-
-        body {
-            font-family: 'Space Grotesk', 'Segoe UI', Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #0a0a1f;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(91, 37, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 90% 80%, rgba(255, 47, 184, 0.1) 0%, transparent 50%);
-        }
-
-        .container {
-            background-color: rgba(16, 16, 32, 0.95);
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.2),
-                        inset 0 0 20px rgba(255, 255, 255, 0.05);
-            text-align: center;
-            max-width: 500px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            font-family: 'Outfit', 'Segoe UI', Arial, sans-serif;
-        }
-
-        h1 {
-            color: #ff2fb8;
-            margin-bottom: 2rem;
-            font-size: 2.2rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 47, 184, 0.5);
-            font-family: 'Outfit', 'Segoe UI', Arial, sans-serif;
-            font-weight: 800;
-        }
-
-        .joke-setup {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            color: #fff;
-            line-height: 1.6;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            font-family: 'Space Grotesk', 'Segoe UI', Arial, sans-serif;
-            font-weight: 400;
-        }
-
-        .joke-punchline {
-            font-size: 1.3rem;
-            color: #8a2be2;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-            padding: 1rem;
-            background: rgba(138, 43, 226, 0.1);
-            border-radius: 10px;
-            font-family: 'Space Grotesk', 'Segoe UI', Arial, sans-serif;
-            font-weight: 600;
-        }
-
-        button {
-            background: linear-gradient(45deg, #ff2fb8, #8a2be2);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.3);
-            font-family: 'Outfit', 'Segoe UI', Arial, sans-serif;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.4);
-            background: linear-gradient(45deg, #ff2fb8, #8a2be2);
-        }
-
-        button:active {
-            transform: translateY(1px);
-        }
-
-        .joke-container {
-            position: relative;
-            margin: 1rem 0;
-        }
-
-        .speak-button {
-            position: absolute;
-            right: -50px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: linear-gradient(45deg, #8a2be2, #4a90e2);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .speak-button:hover {
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.4);
-        }
-
-        .speak-button i {
-            font-size: 1.2rem;
-        }
-
-        @keyframes speakingPulse {
-            0% { transform: translateY(-50%) scale(1); }
-            50% { transform: translateY(-50%) scale(1.1); }
-            100% { transform: translateY(-50%) scale(1); }
-        }
-
-        .speaking {
-            animation: speakingPulse 2s infinite;
-            background: linear-gradient(45deg, #ff2fb8, #8a2be2);
-        }
-
-        .emoji {
-            font-size: 3rem;
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .emoji.shake {
-            animation: shake 0.5s;
-            animation-iteration-count: 3;
-        }
-
-        @keyframes shake {
-            0% { transform: translate(1px, 1px) rotate(0deg); }
-            10% { transform: translate(-1px, -2px) rotate(-1deg); }
-            20% { transform: translate(-3px, 0px) rotate(1deg); }
-            30% { transform: translate(3px, 2px) rotate(0deg); }
-            40% { transform: translate(1px, -1px) rotate(1deg); }
-            50% { transform: translate(-1px, 2px) rotate(-1deg); }
-            60% { transform: translate(-3px, 1px) rotate(0deg); }
-            70% { transform: translate(3px, 1px) rotate(-1deg); }
-            80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
-            100% { transform: translate(1px, -2px) rotate(-1deg); }
-        }
-    </style>
-
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Random Joke Generator</h1>
+        <h1>The Joke Generator</h1>
         <div class="joke-container">
             <p class="joke-setup" id="setup"></p>
             <button class="speak-button" onclick="speakJoke()" id="speakButton">
@@ -183,7 +23,6 @@
         <button onclick="getJoke()">Get New Joke</button>
         <div id="emoji" class="emoji">😂</div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
