@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Joke Generator</title>
-    <link rel="icon" href="data:,">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😂</text></svg>">
     <meta name="robots" content="noindex">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -23,8 +23,9 @@
         </div>
         <div class="joke-container">
             <p class="joke-setup" id="setup"></p>
-            <button class="speak-button" onclick="speakJoke()" id="speakButton">
-                <i class="fas fa-volume-up"></i>
+            <button class="speak-button" onclick="playJoke()" id="speakButton">
+                <!--i class="fas fa-volume-up"></i-->
+                🔊
             </button>
         </div>
         <p class="joke-punchline" id="punchline"></p>
@@ -36,6 +37,6 @@
         </footer>
     </div>
     <script src="script.js"></script>
-    <script src="jokes.js"></script>
+    <script src="jokes_new.js"></script>
 </body>
 </html>

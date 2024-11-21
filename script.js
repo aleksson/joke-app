@@ -1,4 +1,4 @@
-let isSpeaking, isLocal, offline = false;
+let jokeObject, isSpeaking, isLocal, offline = false;
 const emoji = document.getElementById('emoji');
 const setup = document.getElementById('setup');
 const punchline = document.getElementById('punchline');
@@ -18,7 +18,7 @@ const localButton = document.getElementById('local-button');
 })();
 
 function initLocalButton(){
-    //localButton.style.display = 'none';
+    localButton.style.display = 'none';
     localButton.textContent = `Translate to Local Language (${locale.language.toUpperCase()})`;
     /** TODO: Check if local language is supported by browser / SpeechSynthesisVoice */
 }
@@ -28,6 +28,9 @@ async function getJoke(category = 'random', local = false, id = null) {
     // First stop previous speech
     isSpeaking = false;
     window.speechSynthesis.cancel();
+    
+    setup.textContent = '...';
+    punchline.textContent = '...';
     
     // if offline, get local jokes
     if(offline) return getLocalJoke(category);
@@ -47,32 +50,43 @@ async function getJoke(category = 'random', local = false, id = null) {
 
         if(Array.isArray(joke)) joke = joke[0];
 
-        location.hash = joke.id;
-        setup.textContent = joke.setup;
-        punchline.textContent = joke.punchline;
-
         offline = false;
-        speakJoke();
+        jokeObject = joke;
+        location.hash = joke.id;
+        renderJokeOutputWithDelay();
 
     } catch (error) {
         offline = true;
-        console.error('Error fetching joke:', error);
+        //console.error('Error fetching joke:', error);
         //setup.textContent = 'Oops! Failed to fetch joke.';
         //punchline.textContent = 'Please try again later.';
 
         // If offline then run get local jokes
-        return getLocalJoke(category);
+        getLocalJoke(category);
     }
 }
 
 function getLocalJoke(category){
+    if(!category) category = 'random';
     const categoryJokes = window.jokes.filter(joke => (category == 'random' ? joke : joke.type == category));
     const randomJoke = categoryJokes[Math.floor(Math.random() * categoryJokes.length)];
     
-    setup.textContent = randomJoke.setup;
-    punchline.textContent = randomJoke.punchline;
-    
-    return speakJoke();
+    jokeObject = randomJoke;
+    renderJokeOutputWithDelay();
+}
+
+function renderJokeOutputWithDelay(){
+    setup.textContent = jokeObject.setup;
+    speakJoke(jokeObject);
+}
+
+function renderPunchline(pl){
+    // Wait a bit before displaying punchline
+    setTimeout(() => {
+        punchline.textContent = pl;
+        speakJoke(pl);
+        shakeEmoji();
+    },2500);
 }
 
 async function translateJoke(inputText, from = 'en', to = 'sv'){
@@ -81,7 +95,6 @@ async function translateJoke(inputText, from = 'en', to = 'sv'){
     fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             if (data.responseData) {
                 const translatedText = data.responseData.translatedText;
                 const textParts = translatedText.split('|');
@@ -90,28 +103,30 @@ async function translateJoke(inputText, from = 'en', to = 'sv'){
             }
         })
         .catch(error => console.error('Error fetching translation:', error));
-
 }
 
-function speakJoke() {
-    if (isSpeaking) {
-        window.speechSynthesis.cancel();
-        isSpeaking = false;
-        speakButton.classList.remove('speaking');
-        return;
-    }
+function playJoke(){
+    speakJoke(jokeObject);
+}
 
-    const textToSpeak = `${setup.textContent}...,...,${punchline.textContent}`;
-    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+function speakJoke(content) {
+
+    let utterance;
+    if(content['setup']) utterance = new SpeechSynthesisUtterance(content.setup)
+    else utterance = new SpeechSynthesisUtterance(content);
     
     // Configure speech settings
-    utterance.rate = .8; // Speed of speech
-    utterance.pitch = .8; // Pitch of voice
+    utterance.rate = 1; // Speed of speech
+    utterance.pitch = 1; // Pitch of voice
     utterance.volume = 1; // Volume
     
     // Get available voices and set to a English voice if available
     let voices = speechSynthesis.getVoices();
-    const englishVoice = voices.find(voice => voice.lang.startsWith('en-'));
+   
+    let englishVoice;
+    englishVoice = voices.findLast(voice => voice.lang.startsWith('en-'));
+    //englishVoice = voices.find(voice => voice.lang.startsWith('en-'));
+    
     if (englishVoice) {
         utterance.voice = englishVoice;
     }
@@ -131,12 +146,16 @@ function speakJoke() {
         isSpeaking = false;
         isLocal = false;
         speakButton.classList.remove('speaking');
-        shakeEmoji();
+
+        // render punchline after setup is spoken
+        if(content.punchline) renderPunchline(content.punchline);
     };
 
-    utterance.onerror = () => {
+    utterance.onerror = (e) => {
         isSpeaking = false;
         speakButton.classList.remove('speaking');
+        // render punchline after setup is spoken
+        if(content.punchline) renderPunchline(content.punchline);
     };
 
     window.speechSynthesis.speak(utterance);
