@@ -133,10 +133,6 @@ button:active {
     box-shadow: 0 0 15px rgba(138, 43, 226, 0.4);
 }
 
-.speak-button i {
-    font-size: 1.2rem;
-}
-
 @keyframes speakingPulse {
     0% { transform: translateY(-50%) scale(1); }
     50% { transform: translateY(-50%) scale(1.1); }

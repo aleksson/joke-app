@@ -5,8 +5,10 @@ const punchline = document.getElementById('punchline');
 const speakButton = document.getElementById('speakButton');
 const locale = new Intl.Locale(navigator.language);
 const localButton = document.getElementById('local-button');
+const punchlinePause = 1000;
 
 (function(){
+    //preCheck();
     initLocalButton();
     
     const hash = location.hash.slice(1);
@@ -21,9 +23,21 @@ function initLocalButton(){
     localButton.style.display = 'none';
     localButton.textContent = `Translate to Local Language (${locale.language.toUpperCase()})`;
     /** TODO: Check if local language is supported by browser / SpeechSynthesisVoice */
+
+    //speakButton.style.display = "block";
+}
+
+function preCheck(){
+    let vo = window.speechSynthesis.getVoices();
+    const check = {
+        v : vo.find(v => v.lang.startsWith(`${locale.language}-`))
+    };
+    console.log('precheck', check);
 }
 
 async function getJoke(category = 'random', local = false, id = null) {
+
+    //preCheck();
 
     // First stop previous speech
     isSpeaking = false;
@@ -35,7 +49,7 @@ async function getJoke(category = 'random', local = false, id = null) {
     // if offline, get local jokes
     if(offline) return getLocalJoke(category);
 
-    if(local) { // Translate joke to local language
+    if(local === true) { // Translate joke to local language
         const textToSpeak = `${setup.textContent}|${punchline.textContent}`;
         return translateJoke(textToSpeak, 'en', locale.language);
     }
@@ -57,7 +71,7 @@ async function getJoke(category = 'random', local = false, id = null) {
 
     } catch (error) {
         offline = true;
-        //console.error('Error fetching joke:', error);
+        console.error('Error fetching joke, using local jokes:', error);
         //setup.textContent = 'Oops! Failed to fetch joke.';
         //punchline.textContent = 'Please try again later.';
 
@@ -86,7 +100,7 @@ function renderPunchline(pl){
         punchline.textContent = pl;
         speakJoke(pl);
         shakeEmoji();
-    },2500);
+    },punchlinePause);
 }
 
 async function translateJoke(inputText, from = 'en', to = 'sv'){
@@ -110,11 +124,14 @@ function playJoke(){
 }
 
 function speakJoke(content) {
+    
+    // console.log("SPEAK OR STOP");
+    // window.speechSynthesis.cancel();
 
     let utterance;
     if(content['setup']) utterance = new SpeechSynthesisUtterance(content.setup)
     else utterance = new SpeechSynthesisUtterance(content);
-    
+
     // Configure speech settings
     utterance.rate = 1; // Speed of speech
     utterance.pitch = 1; // Pitch of voice
@@ -124,10 +141,16 @@ function speakJoke(content) {
     let voices = speechSynthesis.getVoices();
    
     let englishVoice;
-    englishVoice = voices.findLast(voice => voice.lang.startsWith('en-'));
-    //englishVoice = voices.find(voice => voice.lang.startsWith('en-'));
+    englishVoice = voices.find(voice => voice.lang.startsWith('en-'));
+    //englishVoice = voices.findLast(voice => voice.lang.startsWith('en-'));
     
-    if (englishVoice) {
+
+    if(!englishVoice){
+        // hide plackback btn if english voice is not present
+        speakButton.style.display = "none"
+    }
+
+    else if (englishVoice) {
         utterance.voice = englishVoice;
     }
     
@@ -158,7 +181,9 @@ function speakJoke(content) {
         if(content.punchline) renderPunchline(content.punchline);
     };
 
-    window.speechSynthesis.speak(utterance);
+    if(englishVoice){
+        window.speechSynthesis.speak(utterance);
+    }
 }
 
 // Ensure voices are loaded
@@ -173,5 +198,5 @@ function shakeEmoji(){
     setTimeout(() => {
         emoji.classList.remove('shake');
         emoji.style.opacity = 0;
-    }, 2000);
+    }, 3000);
 }
